@@ -19,7 +19,7 @@ public class GraphicsRunner extends JFrame
       
     setSize(WIDTH,HEIGHT);
     
-    getContentPane().add(new SmileyFace());
+    getContentPane().add(new ShapePanel());
     
     
     //add other classes to run them 

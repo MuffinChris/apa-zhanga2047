@@ -21,6 +21,10 @@ public class Shape
    public Shape(int x, int y, int wid, int ht, Color col)
    {
 		xPos = x;
+		yPos = y;
+		width = wid;
+		height = ht;
+		color = col;
 		//finish this constructor
    }
 
@@ -28,12 +32,16 @@ public class Shape
    public void draw(Graphics window)
    {
       window.setColor(color);
-      window.fillRect(xPos, yPos, width, height);
+      //window.fillRect(xPos, yPos, width, height);
 
       //draw whatever you want
       //    ^
       //  [ :: ]
       //    ()
+      
+      window.drawArc(xPos, yPos, width, height, 0, -180);
+      window.drawRect(xPos + 20, yPos - (yPos/10), width /4, height /4);
+      window.drawRect(xPos + 50, yPos - (yPos/10), width/4, height/4);
 
    }
 
