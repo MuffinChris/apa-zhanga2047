@@ -19,6 +19,9 @@ public class WordSortTwoRunner
 		{
 			String sentence = file.nextLine();
 			//instantiate a new WordSort
+			WordSortTwo wst = new WordSortTwo("SAM WDWJ 121323 9323 I AM SAM SAM");
+			wst.sort();
+			System.out.println(wst);
 		}
 	}
 }
