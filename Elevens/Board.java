@@ -66,7 +66,7 @@ public abstract class Board {
 	 */
 	public boolean isEmpty() {
 		for (int k = 0; k < cards.length; k++) {
-			if (cards[k] != null) {
+			if (cards[k] != null || cards[k].pointValue() != -1) {
 				return false;
 			}
 		}
@@ -121,6 +121,8 @@ public abstract class Board {
 		for (int k = 0; k < cards.length; k++) {
 			if (cards[k] != null) {
 				selected.add(new Integer(k));
+			} else {
+				selected.add(new Integer(-1));
 			}
 		}
 		return selected;
@@ -147,7 +149,7 @@ public abstract class Board {
 	public boolean gameIsWon() {
 		if (deck.isEmpty()) {
 			for (Card c : cards) {
-				if (c != null) {
+				if (c.pointValue() != -1) {
 					return false;
 				}
 			}

@@ -80,7 +80,7 @@ public class Deck {
 	 */
 	public Card deal() {
 		if (isEmpty()) {
-			return null;
+			return new Card(null, null, -1);
 		}
 		size--;
 		Card c = cards.get(size);
