@@ -53,8 +53,10 @@ public class CardGameConsole {
 		System.out.println("DEALT CARDS: ");
 		int index = 0;
 		for (int i : board.cardIndexes()) {
-			System.out.print(board.cardAt(i) + "["+ index +"], ");
-			index++;
+			if (board.cardAt(i).pointValue() != -1) {
+				System.out.print(board.cardAt(i) + "["+ index +"], ");
+				index++;
+			}
 		}
 		System.out.println();
 	}
