@@ -18,7 +18,6 @@ public class CardGameConsole {
 		Scanner scan = new Scanner(System.in);
 		while (!board.gameIsWon()) {
 			boardState();
-			
 			System.out.print("Select Cards (Separate by -): ");
 			String input = scan.next();
 			System.out.println();
@@ -35,15 +34,14 @@ public class CardGameConsole {
 				board.replaceSelectedCards(selectedInputs);
 				System.out.println();
 				System.out.println("You have replaced cards at indexes: " + selectedInputs.toString());
-				System.out.println();
 			} else {
 				System.out.println();
 				System.out.println("----- Illegal Move. -----");
-				System.out.println();
 			}
 		}
-		
-		System.out.println("YOU WON, CONGRATS!");
+		if (board.gameIsWon()) {
+			System.out.println("YOU WON, CONGRATS!");
+		}
 		
 	}
 	
@@ -55,8 +53,8 @@ public class CardGameConsole {
 		for (int i : board.cardIndexes()) {
 			if (board.cardAt(i).pointValue() != -1) {
 				System.out.print(board.cardAt(i) + "["+ index +"], ");
-				index++;
 			}
+			index++;
 		}
 		System.out.println();
 	}
