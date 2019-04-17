@@ -49,7 +49,13 @@ public class Block implements Locatable
 
   //add the other set methods
    
-
+  public int getCX() {
+	  return xPos + width;
+  }
+  public int getCY() {
+	  return yPos + height;
+  }
+  
   public void setColor(Color col)
   {
 
@@ -87,6 +93,7 @@ public class Block implements Locatable
   public Color getColor() {
 	  return color;
   }
+  
   
 
   public void draw(Graphics window)

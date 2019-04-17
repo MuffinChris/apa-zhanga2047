@@ -6,12 +6,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Canvas;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import static java.lang.Character.*;
 import java.awt.image.BufferedImage;
-import java.awt.event.ActionListener;
 
 public class Pong extends Canvas implements KeyListener, Runnable
 {
@@ -20,14 +18,43 @@ public class Pong extends Canvas implements KeyListener, Runnable
   private Paddle rightPaddle;
   private boolean[] keys;
   private BufferedImage back;
+  private int redScore = 0;
+  private int blueScore = 0;
+  private Wall topWall;
+  private Wall botWall;
+  private Wall rightWall;
+  private Wall leftWall;
+  private Score score;
+  private int width;
+  private int height;
 
-
-  public Pong()
+  public Pong(int width, int height)
   {
     //set up all variables related to the game
-	ball = new Ball();
-	leftPaddle = new Paddle(50, 150, 10, 50, Color.BLUE, 5);
-	rightPaddle = new Paddle(700, 150, 10, 50, Color.RED, 5);
+	  this.width = width;
+	  this.height = height;
+	ball = new Ball(width/2, height/2, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
+	System.out.println(ball.getWidth());
+	int paddleWidth = (int) (width * 0.125);
+	int paddleHeight = (int) (height * 0.5);
+	int paddleDWidth = (int) (0.0125 * width);
+	int paddleDHeight = (int) (0.1 * height);
+	
+	leftPaddle = new Paddle(paddleWidth, paddleHeight, paddleDWidth, paddleDHeight, Color.BLUE, 5);
+	rightPaddle = new Paddle(width - paddleWidth - paddleDWidth, paddleHeight, paddleDWidth, paddleDHeight, Color.RED, 5);
+	
+	int wallHeight = (int) (width * 0.0375);
+	int botWallY = (int) Math.ceil(height * 0.8566666);
+	topWall = new Wall(0, 0, width, wallHeight, Color.GRAY);
+	botWall = new Wall(0, botWallY, width, wallHeight * 2, Color.GRAY);
+	
+	int visWidth = botWallY;
+	int rightWallX = width - wallHeight - 1;
+	int lrWallHeight = (visWidth - (wallHeight));
+	leftWall = new Wall(0, wallHeight, wallHeight, lrWallHeight, Color.CYAN);
+	rightWall = new Wall(rightWallX, wallHeight, wallHeight, lrWallHeight, Color.CYAN);
+	System.out.println(rightWall.getX());
+	score = new Score(Color.BLACK, Color.BLUE, Color.RED);
 
     keys = new boolean[4];
 
@@ -35,7 +62,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
     setVisible(true);
 		
     new Thread(this).start();
-    addKeyListener(this);		//starts the key thread to log key strokes
+    addKeyListener(this);
   }
 	
   public void update(Graphics window){
@@ -44,95 +71,84 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
   public void paint(Graphics window)
   {
-    //set up the double buffering to make the game animation nice and smooth
     Graphics2D twoDGraph = (Graphics2D)window;
-
-    //take a snap shop of the current screen and same it as an image
-    //that is the exact same width and height as the current screen
     if(back==null)
       back = (BufferedImage)(createImage(getWidth(),getHeight()));
-
-    //create a graphics reference to the back ground image
-    //we will draw all changes on the background image
     Graphics graphToBack = back.createGraphics();
-
-
+    
     ball.moveAndDraw(graphToBack);
     leftPaddle.draw(graphToBack);
     rightPaddle.draw(graphToBack);
+    topWall.draw(graphToBack);
+    botWall.draw(graphToBack);
+    rightWall.draw(graphToBack);
+    leftWall.draw(graphToBack);
+    score.draw(graphToBack, redScore, blueScore, width, height);
 
-
-    //see if ball hits left wall or right wall
-    if(!(ball.getX()>=0 && ball.getX()<=780))
+    if(ball.didCollideRight(rightWall) || ball.didCollideLeft(leftWall))
     {
-      ball.setXSpeed(-ball.getXSpeed());
-      ball.setYSpeed(ball.getYSpeed());
+    	if(ball.didCollideLeft(leftWall))
+        {
+          blueScore++;
+        } else {
+          redScore++;
+        }
+	    	score.updateScore(graphToBack, redScore, blueScore, width, height);
+	    	Ball clearb = new Ball(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.WHITE);
+	    	ball.setPos(width/2, height/2);
+	    	clearb.draw(graphToBack);
+		    ball.setXSpeed(-ball.getXSpeed());
+		    ball.setYSpeed((int) (Math.random() * 2 + 1));
     }
 
-		
-    //see if the ball hits the top or bottom wall 
-
-    if(!(ball.getY()>=10 && ball.getY()<=540))
-    {
-      ball.setYSpeed(-ball.getYSpeed());
+    if (ball.didCollideTop(topWall)) {
+        ball.setYSpeed(-ball.getYSpeed());
+    	
+    }
+    
+    if (ball.didCollideBottom(botWall)) {
+        ball.setYSpeed(-ball.getYSpeed());
+    	
     }
 
-
-    //see if the ball hits the left paddle
-	if ((ball.getX() <= (leftPaddle.getX() + leftPaddle.getWidth() + Math.abs(ball.getXSpeed())) 
-			&& (ball.getY() >= leftPaddle.getY() && 
-			ball.getY() <= leftPaddle.getY() + leftPaddle.getHeight() || 
-			ball.getY() + ball.getHeight() >= leftPaddle.getY() &&
-			ball.getY() + ball.getHeight() < leftPaddle.getY() + leftPaddle.getHeight()))) 
-	{
-		if (ball.getX() <= leftPaddle.getX() + leftPaddle.getWidth() - Math.abs(ball.getXSpeed())) {
+    if (ball.didCollideLeft(leftPaddle)) {
+    	if (ball.getX() <= leftPaddle.getCX() - Math.abs(ball.getXSpeed())) {
 			ball.setYSpeed(-ball.getYSpeed());
 		} else {
 			ball.setXSpeed(-ball.getXSpeed());
 		}
-	}
-	
-		
-    //see if the ball hits the right paddle
-	if ((ball.getX() <= (rightPaddle.getX() + rightPaddle.getWidth() + Math.abs(ball.getXSpeed())) 
-			&& (ball.getY() >= rightPaddle.getY() && 
-			ball.getY() <= rightPaddle.getY() + rightPaddle.getHeight() || 
-			ball.getY() + ball.getHeight() >= rightPaddle.getY() &&
-			ball.getY() + ball.getHeight() < rightPaddle.getY() + rightPaddle.getHeight()))) 
-	{
-		if (ball.getX() >= rightPaddle.getX() + rightPaddle.getWidth() + Math.abs(ball.getXSpeed())) {
+    }
+    
+    if (ball.didCollideRight(rightPaddle)) { 
+    	if (ball.getX() >= rightPaddle.getX() + Math.abs(ball.getXSpeed())) {
 			ball.setYSpeed(-ball.getYSpeed());
 		} else {
 			ball.setXSpeed(-ball.getXSpeed());
 		}
-	}
-		
-		
-
-
-    //see if the paddles need to be moved
+    }
+    
 	if (keys[0])
     {
-	    if (leftPaddle.getY() >= 10) {
+	    if (leftPaddle.getY() >= topWall.getCY()) {
 	      leftPaddle.moveUpAndDraw(graphToBack);
 	    }
     }
     if (keys[1])
     {
-    	if (leftPaddle.getY() <= 490) {
+    	if (leftPaddle.getCY() <= botWall.getY()) {
     		leftPaddle.moveDownAndDraw(graphToBack);
     	}
     }
     if (keys[2])
     {
-    	if (rightPaddle.getY() >= 10) {
+    	if (rightPaddle.getY() >= topWall.getCY()) {
   	      rightPaddle.moveUpAndDraw(graphToBack);
   	    }
     	
     }
     if (keys[3])
     {
-    	if (rightPaddle.getY() <= 490) {
+    	if (rightPaddle.getCY() <= botWall.getY()) {
     		rightPaddle.moveDownAndDraw(graphToBack);
     	}
     }
