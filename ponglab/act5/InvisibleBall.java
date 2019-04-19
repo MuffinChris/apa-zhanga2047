@@ -22,7 +22,7 @@ public class InvisibleBall extends Ball {
 	  {
 		System.out.println(ticktime);
 		ticktime--;
-		if (ticktime == 0) {
+		if (ticktime <= 0) {
 			if (tickinvis) {
 				ticktime = (int) (Math.random() * 400);
 			} else {

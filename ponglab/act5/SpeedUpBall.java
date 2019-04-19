@@ -28,28 +28,30 @@ class SpeedUpBall extends Ball
   }
 
 
-  public SpeedUpBall(int x, int y, int xSpd, int ySpd)
+  public SpeedUpBall(int x, int y, int wid, int h)
   {
 
-	  super(x,y,10, 10, Color.BLACK, (int) (xSpd/10), (int) (ySpd/10));
-	  defx = xSpd/10;
-	  defy = ySpd/10;
+	  super(x,y, wid, h);
+	  defx = getXSpeed();
+	  defy = getYSpeed();
+	  setXSpeed(defx);
+	  setYSpeed(defy);
   }
 
   public SpeedUpBall(int x, int y, int wid, int ht, int xSpd, int ySpd)
   {
-	  super(x,y,wid,ht,Color.BLACK,(int) (xSpd/10),(int) (ySpd/10));
-	  defx = xSpd/10;
-	  defy = ySpd/10;
+	  super(x,y,wid,ht,Color.BLACK,xSpd, ySpd);
+	  defx = xSpd;
+	  defy = ySpd;
 
   }
 
 
   public SpeedUpBall(int x, int y, int wid, int ht, Color col, int xSpd, int ySpd)
   {
-	  super(x,y,wid,ht,col,(int) (xSpd/10),(int) (ySpd/10));
-	  defx = xSpd/10;
-	  defy = ySpd/10;
+	  super(x,y,wid,ht,col,(int) (xSpd/5),(int) (ySpd/5));
+	  defx = xSpd/5;
+	  defy = ySpd/5;
 
 
   }

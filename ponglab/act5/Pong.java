@@ -39,7 +39,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
 	
 	this.width = width;
 	this.height = height;
-	ball = new InvisibleBall(width/2, height/2, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
+	ball = new SpeedUpBall(width/2, height/2, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
 	System.out.println(ball.getWidth());
 	int paddleX = (int) (width * 0.125);
 	int paddleY = (int) (height * 0.5);
