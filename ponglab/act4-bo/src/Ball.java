@@ -91,7 +91,7 @@ public class Ball extends Block implements Collidable<Block>
   }
 
   public boolean didCollideLeft(Block b) {
-	  if (getXSpeed() < 0 && getX() <= b.getCX() + getXSpeed() && getX() >= b.getX() - getXSpeed()) {
+	  if (getXSpeed() < 0 && getX() <= b.getCX() + getXSpeed() && getX() >= b.getX() - 2 * getXSpeed()) {
 		  if ((getY() >= b.getY() && getCY() <= b.getCY()))
 			{
 			  return true;
@@ -116,7 +116,7 @@ public class Ball extends Block implements Collidable<Block>
 	  return false;
   }
   public boolean didCollideRight(Block b) {
-	  if (getXSpeed() > 0 && getCX() >= b.getX() - getXSpeed() && getCX() <= b.getX() + getXSpeed()) {
+	  if (getXSpeed() > 0 && getCX() >= b.getX() - getXSpeed() && getCX() <= b.getX() + 2 * getXSpeed()) {
 		  if (getY() >= b.getY() && getCY() <= b.getCY()) {
 			  return true;
 		  }
@@ -141,7 +141,7 @@ public class Ball extends Block implements Collidable<Block>
 	  }
   public boolean didCollideTop(Block b) {
 	  	if (getCY() >= b.getY() - ySpeed && getCY() <= b.getY() + ySpeed && getYSpeed() > 0) {
-	  		if (getCX() <= b.getCX() && getX() >= b.getX()) {
+	  		if (getX() <= b.getCX() && getCX() >= b.getX()) {
 	  			return true;
 	  		}
 		}
@@ -149,7 +149,7 @@ public class Ball extends Block implements Collidable<Block>
 	  }
   public boolean didCollideBottom(Block b) {
 		  if ((getY() <= b.getCY() - ySpeed) && getY() >= b.getCY() + ySpeed && getYSpeed() < 0) {
-			  if (getCX() <= b.getCX() && getX() >= b.getX()) {
+			  if (getX() <= b.getCX() && getCX() >= b.getX()) {
 				  return true;
 			  }
 		  }

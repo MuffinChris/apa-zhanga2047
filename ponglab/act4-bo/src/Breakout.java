@@ -37,7 +37,7 @@ public class Breakout extends Canvas implements KeyListener, Runnable
 	  int y = 80;
 	  for (int z = 0; z < 4; z++) {
 		  for (int i = 0; i < 17; i++) {
-			  Block brick = new Block(x + (i * 50), y + (z * 40), 49, 35, Color.YELLOW);
+			  Block brick = new Block(x + (i * 50), y + (z * 40), 49, 38, Color.LIGHT_GRAY);
 			  bricks.add(brick);
 		  }
 	  }
@@ -52,11 +52,11 @@ public class Breakout extends Canvas implements KeyListener, Runnable
 	
 	this.width = width;
 	this.height = height;
-	ball = new Ball(400, 300, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
+	ball = new Ball(400, 300, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width), Color.BLACK, 6, -3);
 	System.out.println(ball.getWidth());
 	int paddleY = (int) (height * 0.75);
 	int paddleWidth = (int) (0.1 * width);
-	int paddleHeight = (int) (0.0125 * height);
+	int paddleHeight = (int) (0.05 * height);
 	int paddleSpeed = (int) (0.00833333 * width);
 	
 	paddle = new Paddle(width / 2, paddleY, paddleWidth, paddleHeight, paddleSpeed);
@@ -69,7 +69,7 @@ public class Breakout extends Canvas implements KeyListener, Runnable
 	int rightWallX = width - wallHeight;
 	int lrWallHeight = (botWallY - (wallHeight) - brokenOffsetY);
 	leftWall = new Wall(0, wallHeight, wallHeight, lrWallHeight, Color.GRAY);
-	rightWall = new Wall(rightWallX - brokenOffsetX, wallHeight, wallHeight, lrWallHeight, Color.GRAY);
+	rightWall = new Wall(rightWallX - brokenOffsetX, wallHeight, wallHeight + 100, lrWallHeight, Color.GRAY);
 	score = new Score(Color.BLACK, Color.BLUE);
 
     keys = new boolean[2];
@@ -152,6 +152,12 @@ public class Breakout extends Canvas implements KeyListener, Runnable
     	ball.setXSpeed(-ball.getXSpeed());
     }
     if (ball.didCollideLeft(leftWall)) {
+    	ball.setXSpeed(-ball.getXSpeed());
+    }
+    if (ball.didCollideRight(paddle)) {
+    	ball.setXSpeed(-ball.getXSpeed());
+    }
+    if (ball.didCollideLeft(paddle)) {
     	ball.setXSpeed(-ball.getXSpeed());
     }
     
