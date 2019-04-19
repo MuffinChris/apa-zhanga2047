@@ -39,7 +39,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
 	
 	this.width = width;
 	this.height = height;
-	ball = new Ball(width/2, height/2, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
+	ball = new InvisibleBall(width/2, height/2, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width));
 	System.out.println(ball.getWidth());
 	int paddleX = (int) (width * 0.125);
 	int paddleY = (int) (height * 0.5);
@@ -100,7 +100,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
         }
 	    	score.updateScore(graphToBack, redScore, blueScore, width, height);
 	    	Ball clearb = new Ball(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.WHITE);
-	    	ball.setPos(width/2, height/2);
+	    	ball.reset(width, height);
 	    	clearb.draw(graphToBack);
 		    ball.setXSpeed(-ball.getXSpeed());
 		    ball.setYSpeed((int) (Math.random() * 2 + 1));

@@ -5,14 +5,18 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-	Block.java \
-	Locatable.java \
 	Ball.java \
 	BlinkyBall.java \
-	SpeedyBall.java \
+	Block.java \
+	Collidable.java \
+	InvisibleBall.java \
+	Locatable.java \
 	Paddle.java \
 	Pong.java \
-	TheGame.java
+	Score.java \
+	SpeedUpBall.java \
+	TheGame.java \
+	Wall.java
 
 default: classes
 
