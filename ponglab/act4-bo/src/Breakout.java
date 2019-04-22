@@ -44,7 +44,7 @@ public class Breakout extends Canvas implements KeyListener, Runnable
 	  
 	  
     //set up all variables related to the game
-	  // USE WITH AIDENS PC
+	// USE WITH AIDENS PC
 	int brokenOffsetX = (int) (width * 0.02);
 	int brokenOffsetY = (int) (height * 0.05);
 	//int brokenOffsetX = 0;
@@ -53,7 +53,6 @@ public class Breakout extends Canvas implements KeyListener, Runnable
 	this.width = width;
 	this.height = height;
 	ball = new Ball(400, 300, (int) Math.ceil(0.0125 * width), (int) Math.ceil(0.0125 * width), Color.BLACK, 6, -3);
-	System.out.println(ball.getWidth());
 	int paddleY = (int) (height * 0.75);
 	int paddleWidth = (int) (0.1 * width);
 	int paddleHeight = (int) (0.05 * height);

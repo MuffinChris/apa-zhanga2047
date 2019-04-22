@@ -8,6 +8,11 @@ CLASSES = \
 	Block.java \
 	Locatable.java \
 	Ball.java \
+	Paddle.java \
+	PaddleTestOne.java \
+	PaddleTestTwo.java \
+	BlockTestOne.java \
+	BlockTestTwo.java \
 	BallTestOne.java \
 	BallTestTwo.java \
 	Tester.java
