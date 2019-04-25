@@ -226,6 +226,29 @@ public class Pixel
     updatePicture(this.getAlpha(),red,green,blue);
   }
   
+  public void setGrayAverage() {
+	  int average = ((getGreen() + getBlue() + getRed()) / 3);	
+      updatePicture(this.getAlpha(), average, average, average);
+  }
+  
+  public void setGrayLuminosity() {
+	  int modblue = (int) (0.07 * getBlue());
+	  int modgreen = (int) (0.72 * getGreen());
+	  int modred = (int) (0.21 * getRed());
+	  int average = (modblue + modgreen + modred);
+	  updatePicture(this.getAlpha(), average, average, average);
+  }
+  
+  public void setGrayLightness() {
+	  int max = Math.max(getGreen(), getBlue());
+	  max = Math.max(max, getRed());
+	  
+	  int min = Math.min(getGreen(), getBlue());
+	  min = Math.min(min, getRed()); 
+	  int average = ((min + max) / 2);
+	  updatePicture(this.getAlpha(), average, average, average);
+  }
+  
   /**
    * Method to update the picture based on the passed color
    * values for this pixel
