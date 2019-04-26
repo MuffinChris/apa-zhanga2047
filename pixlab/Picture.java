@@ -526,11 +526,11 @@ public class Picture extends SimplePicture
     int rc = 0;
     int cc = 0;
     
-    int rowinc = pixels.length/200;
-    int colinc = pixels[0].length/200;
+    int rowinc = pixels.length/50;
+    int colinc = pixels[0].length/50;
     
-    while (rc + rowinc < pixels.length) {
-    	while (cc + colinc < pixels[0].length) {
+    while (rc + rowinc <= pixels.length-1) {
+    	while (cc + colinc <= pixels[0].length-1) {
     		int avg = ed2A(rc, cc, rc+rowinc, cc+colinc);
     		for (int row = rc; row < rc+rowinc; row++) {
     			for (int col = cc; col < cc + colinc; col++) {
