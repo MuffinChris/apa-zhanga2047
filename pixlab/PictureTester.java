@@ -124,11 +124,48 @@ public class PictureTester
     swan.explore();
   }
   
+  public static void testEdgeDetection2()
+  {
+    Picture swan = new Picture("swan.jpg");
+    swan.edgeDetection2(30);
+    swan.explore();
+  }
+  
   public static void testMirrorArms() {
 	  Picture snowman = new Picture("snowman.jpg");
 	  snowman.explore();
 	  snowman.mirrorArms();
 	  snowman.explore();
+  }
+  
+  public static void testMirrorGull() {
+	  Picture seagull = new Picture("seagull.jpg");
+	  seagull.explore();
+	  seagull.mirrorGull();
+	  seagull.explore();
+  }
+  
+  public static void testMirrorRectangle() {
+	  Picture seagull = new Picture("seagull.jpg");
+	  seagull.explore();
+	  seagull.mirrorRectangle(232, 238, 322, 344, true);
+	  seagull.explore();
+	  Picture snowman = new Picture("snowman.jpg");
+	  snowman.explore();
+	  snowman.mirrorRectangle(160, 104 ,196, 295, false);
+	  snowman.explore();
+  }
+  
+  public static void testCopyS() {
+	  Picture canvas = new Picture("640x480.jpg");
+	  canvas.copy(new Picture("seagull.jpg"), 0, 0, 200, 200, 0, 0);
+	  canvas.explore();
+  }
+  
+  public static void testMyCollage() {
+	  Picture canvas = new Picture("640x480.jpg");
+	  canvas.myCollage();
+	  canvas.explore();
   }
   
   /** Main method for testing.  Every class can have a main
@@ -143,6 +180,8 @@ public class PictureTester
     testKeepBlue();
     testNegate();
     testGray();*/
+	  //testMyCollage();
+	  //testMirrorRectangle();
 	//testNegate();
 	//testAllGray();
 	//testMirrorVerticalRightToLeft();
@@ -154,12 +193,12 @@ public class PictureTester
     testFixUnderwater();*/
     //testMirrorVertical();
     //testMirrorTemple();
-    testMirrorArms();
-    /*testMirrorGull();
-    testMirrorDiagonal();*/
+    //testMirrorArms();
+    //testMirrorGull();
+    /*testMirrorDiagonal();*/
     //testCollage();
     //testCopy();
-    //testEdgeDetection();
+    testEdgeDetection2();
     /*testEdgeDetection2();
     testChromakey();
     testEncodeAndDecode();
