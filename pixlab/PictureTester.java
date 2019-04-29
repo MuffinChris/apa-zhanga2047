@@ -131,6 +131,14 @@ public class PictureTester
     swan.explore();
   }
   
+  public static void testBlur(int x, int y, int w, int h, int n) {
+	  Picture redMoto = new Picture("redMotorcycle.jpg");
+	  for (int i = 0; i< n; i++) {
+		  redMoto.blur(x, y, w, h);
+	  }
+	  redMoto.explore();
+  }
+  
   public static void testMirrorArms() {
 	  Picture snowman = new Picture("snowman.jpg");
 	  snowman.explore();
@@ -198,7 +206,8 @@ public class PictureTester
     /*testMirrorDiagonal();*/
     //testCollage();
     //testCopy();
-    testEdgeDetection2();
+    //testEdgeDetection2();
+	  testBlur(180, 160, 25, 25, 10);
     /*testEdgeDetection2();
     testChromakey();
     testEncodeAndDecode();

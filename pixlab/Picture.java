@@ -271,6 +271,34 @@ public class Picture extends SimplePicture
 	    } 
   }
   
+  public void blur(int x, int y, int w, int h) {
+	  	Pixel[][] pixels = this.getPixels2D();
+	    int height = h + x;
+	    int width = w + y;
+		    for (int row = x; row <= height; row++) {
+		    	for (int col = y; col <= width; col++) {
+		    		int averageB = 0;
+		    		int averageR = 0;
+		    		int averageG = 0;
+		    		int terms = 0;
+		    		for (int r = -1; r <= 1; r++) {
+		    			for (int c = -1; c<= 1; c++) {
+		    				averageB+=pixels[row-r][col-c].getBlue();
+		    				averageR+=pixels[row-r][col-c].getRed();
+		    				averageG+=pixels[row-r][col-c].getGreen();
+		    				terms++;
+		    			}
+		    		}
+		    		averageB/=terms;
+		    		averageR/=terms;
+		    		averageG/=terms;
+		    		pixels[row][col].setRed(averageR);
+		    		pixels[row][col].setBlue(averageB);
+		    		pixels[row][col].setGreen(averageG);
+		    	}
+		    }
+	    }
+  
   public void mirrorDiagonal() {
 	  Pixel[][] pixels = this.getPixels2D();
 	    Pixel blPixel = null;
