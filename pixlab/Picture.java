@@ -277,24 +277,28 @@ public class Picture extends SimplePicture
 	    int width = w + y;
 		    for (int row = x; row <= height; row++) {
 		    	for (int col = y; col <= width; col++) {
-		    		int averageB = 0;
-		    		int averageR = 0;
-		    		int averageG = 0;
-		    		int terms = 0;
-		    		for (int r = -1; r <= 1; r++) {
-		    			for (int c = -1; c<= 1; c++) {
-		    				averageB+=pixels[row-r][col-c].getBlue();
-		    				averageR+=pixels[row-r][col-c].getRed();
-		    				averageG+=pixels[row-r][col-c].getGreen();
-		    				terms++;
-		    			}
+		    		if (row >= 0 && row < pixels.length && col >= 0 && col < pixels[0].length) {
+			    		int averageB = 0;
+			    		int averageR = 0;
+			    		int averageG = 0;
+			    		int terms = 0;
+			    		for (int r = -1; r <= 1; r++) {
+			    			for (int c = -1; c<= 1; c++) {
+			    				if (row-r >= 0 && row-r < pixels.length && col-c >= 0 && col-c < pixels[0].length) {
+				    				averageB+=pixels[row-r][col-c].getBlue();
+				    				averageR+=pixels[row-r][col-c].getRed();
+				    				averageG+=pixels[row-r][col-c].getGreen();
+				    				terms++;
+			    				}
+			    			}
+			    		}
+			    		averageB/=terms;
+			    		averageR/=terms;
+			    		averageG/=terms;
+			    		pixels[row][col].setRed(averageR);
+			    		pixels[row][col].setBlue(averageB);
+			    		pixels[row][col].setGreen(averageG);
 		    		}
-		    		averageB/=terms;
-		    		averageR/=terms;
-		    		averageG/=terms;
-		    		pixels[row][col].setRed(averageR);
-		    		pixels[row][col].setBlue(averageB);
-		    		pixels[row][col].setGreen(averageG);
 		    	}
 		    }
 	    }
