@@ -13,6 +13,7 @@ public class Alien extends MovingThing
 {
   private int speed;
   private Image image;
+  private boolean life;
 
   public Alien()
   {
@@ -22,17 +23,20 @@ public class Alien extends MovingThing
   public Alien(int x, int y)
   {
     //add code here
+	  this(x, y, 50, 50, 3);
   }
 
   public Alien(int x, int y, int s)
   {
     //add code here
+	  this(x, y, 50, 50, s);
   }
 
   public Alien(int x, int y, int w, int h, int s)
   {
     super(x, y, w,h);
     speed=s;
+    life = true;
     try
     {
       URL url = getClass().getResource("alien.jpg");
@@ -41,22 +45,37 @@ public class Alien extends MovingThing
     catch(Exception e)
     {
       //feel free to do something here
+    	e.printStackTrace();
     }
   }
 
   public void setSpeed(int s)
   {
     //add code
+	  speed = s;
+  }
+  
+  public void die() {
+	  life = false;
+  }
+  
+  public boolean getLife() {
+	  return life;
   }
 
   public int getSpeed()
   {
-    return 0;
+    return speed;
   }
 
-  public void move(String direction)
+  public void move()
   {
     //add code here
+	  setX(getX() + speed);
+	  if (getX() < -25 || getX() > StarFighter.WIDTH) {
+		  setY(getY() + 75);
+		  setSpeed(-speed);
+	  }
   }
 
   public void draw( Graphics window )
@@ -68,4 +87,10 @@ public class Alien extends MovingThing
   {
     return "";
   }
+
+@Override
+public void move(String direction) {
+	//this is wrong lol
+	
+}
 }

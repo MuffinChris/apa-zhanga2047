@@ -14,6 +14,10 @@ public class Ship extends MovingThing
 {
   private int speed;
   private Image image;
+  private boolean cooldown = true;
+  private int cdticker;
+  
+  private int basecd = 50;
 
   public Ship()
   {
@@ -38,6 +42,7 @@ public class Ship extends MovingThing
   public Ship(int x, int y, int w, int h, int s)
   {
     super(x, y, w, h);
+    cdticker = basecd;
     speed=s;/*try
     {
     URL url = getClass().getResource("ship.jpg");
@@ -68,7 +73,27 @@ public class Ship extends MovingThing
     //add more code
 	  speed = s;
   }
-
+  
+  public int getTicker() {
+	  return cdticker;
+  }
+  
+  public void setTicker(int i) {
+	  cdticker = i;
+  }
+  
+  public boolean getCD() {
+	  return cooldown;
+  }
+  
+  public void toggleCD() {
+	  cooldown =! cooldown;
+  }
+  
+  public void setbasecd(int i) {
+	  basecd = i;
+  }
+  
   public int getSpeed()
   {
     return speed;
@@ -78,16 +103,31 @@ public class Ship extends MovingThing
   {
     //add code here
 	  if (direction.equalsIgnoreCase("LEFT")) {
-		  setPos(getX() - speed, getY());
+		  if (getX() > 0) {
+			  setPos(getX() - speed, getY());
+		  }
 	  }
 	  if (direction.equalsIgnoreCase("RIGHT")) {
-		  setPos(getX() + speed, getY());
+		  if (getX() < StarFighter.WIDTH) {
+			  setPos(getX() + speed, getY());
+		  }
 	  }
 	  if (direction.equalsIgnoreCase("UP")) {
-		  setPos(getX(), getY() - speed);
+		  if (getY() > 0) {
+			  setPos(getX(), getY() - speed);
+		  }
 	  }
 	  if (direction.equalsIgnoreCase("DOWN")) {
-		  setPos(getX(), getY() + speed);
+		  if (getY() < StarFighter.HEIGHT) {
+			  setPos(getX(), getY() + speed);
+		  }
+	  }
+  }
+  
+  public void shoot(Graphics window) {
+	  if (cooldown) {
+		  toggleCD();
+		  cdticker = basecd;
 	  }
   }
 
