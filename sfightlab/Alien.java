@@ -14,29 +14,31 @@ public class Alien extends MovingThing
   private int speed;
   private Image image;
   private boolean life;
+  private int hp;
 
   public Alien()
   {
-    this(0,0,30,30,0);
+    this(0,0,30,30,0, 1);
   }
 
   public Alien(int x, int y)
   {
     //add code here
-	  this(x, y, 50, 50, 3);
+	  this(x, y, 50, 50, 3, 1);
   }
 
   public Alien(int x, int y, int s)
   {
     //add code here
-	  this(x, y, 50, 50, s);
+	  this(x, y, 50, 50, s, 1);
   }
 
-  public Alien(int x, int y, int w, int h, int s)
+  public Alien(int x, int y, int w, int h, int s, int hp)
   {
     super(x, y, w,h);
     speed=s;
     life = true;
+    this.hp = hp;
     try
     {
       URL url = getClass().getResource("alien.jpg");
@@ -56,13 +58,20 @@ public class Alien extends MovingThing
   }
   
   public void die() {
-	  life = false;
+	  hp--;
+	  if (hp <= 0) {
+		  life = false;
+	  }
   }
   
   public boolean getLife() {
 	  return life;
   }
 
+  public int getHp() {
+	  return hp;
+  }
+  
   public int getSpeed()
   {
     return speed;

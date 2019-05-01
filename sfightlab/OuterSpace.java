@@ -106,9 +106,9 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     }
     if (keys[5] == true) {
     	if (ship.getCD()) {
-    		for (int i = 0; i < 10; i++) {
-    			int speed = (int) (Math.random() * 2 + 1);
-    			int xspeed = (int) (Math.random() * 5 + 1);
+    		for (int i = 0; i < 30; i++) {
+    			int speed = (int) (Math.random() * 3 + 1);
+    			int xspeed = (int) (Math.random() * 3 + 1);
     			double neg = Math.random();
     			int mod = 1;
     			if (neg >= 0.5) {
@@ -118,7 +118,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		    	shots.add(ammo);
     		}
     	}
-    	ship.setbasecd(600);
+    	ship.setbasecd(1500);
     	ship.shoot(graphToBack);
     }
     
@@ -133,6 +133,20 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    if (random >= 0.998D) {
 	    	Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getWidth() + 5, 1, Color.RED, 0);
 	    	shots.add(ammo);
+	    }
+	    if (al.getHp() > 1) {
+	    	random = Math.random();
+		    if (random >= 0.95D) {
+		    	int speed = (int) (1 + 2 * Math.random());
+		    	int yspeed = (int) (1 + 2 * Math.random());
+		    	double neg = Math.random();
+    			int mod = 1;
+    			if (neg >= 0.5) {
+    				mod = -1;
+    			}
+		    	Ammo ammo = new Ammo(al.getX() + 80, al.getY() + al.getHeight() + 5, speed, Color.RED, yspeed * mod);
+		    	shots.add(ammo);
+		    }
 	    }
     }
     
@@ -154,14 +168,20 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     horde.drawEmAll(graphToBack);
     horde.removeDeadOnes(shots.getList());
     if (horde.getSize() <= 0) {
+    	diffi+=10;
     	if (diffi>=60) {
     		gamestate = false;
     		graphToBack.setColor(Color.GREEN);
 			graphToBack.drawString("YOU WON!!!", 250, 250 );
     	}
-    	diffi+=10;
     	horde = new AlienHorde(diffi);
-    	horde.populate();
+    	if (diffi >= 50) {
+    		horde = new AlienHorde(0);
+    		Alien bigal = new Alien(300, 10, 200, 50, 1, 100);
+    		horde.add(bigal);
+    	} else {
+    		horde.populate();
+    	}
     }
 
     for (Ammo a : shots.getList()) {
