@@ -11,8 +11,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import static java.lang.Character.*;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class OuterSpace extends Canvas implements KeyListener, Runnable
 {
@@ -30,11 +33,14 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
   private boolean gamestate = true;
   private int diffi = 10;
 
+  private boolean endless = true;
+  private int eTicker = 500;
+  
   public OuterSpace()
   {
     setBackground(Color.black);
 
-    keys = new boolean[6];
+    keys = new boolean[7];
 
     //instantiate other instance variables
     //Ship, Alien
@@ -71,13 +77,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
     graphToBack.setColor(Color.BLACK);
     graphToBack.fillRect(0,0,800,600);
-    graphToBack.setColor(Color.RED);
-    graphToBack.drawString("Star Fighter Game (GAME OF THE YEAR: 2019)", 250, 50 );
-    graphToBack.drawString("CONTROLS: ", 250, 80);
-    graphToBack.drawString("WASD - Movement", 250, 100);
-    graphToBack.drawString("SPACE - Standard Fire", 360, 100);
-    graphToBack.drawString("E - Scattershot", 500, 100);
-    //graphToBack.drawString("Q - Shield", 600, 100);
+    
     ship.draw(graphToBack);
     
     if(keys[0] == true)
@@ -101,26 +101,37 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    	Ammo ammo = new Ammo(ship.getX() + 10, ship.getY() - 10, -4, Color.YELLOW, 0);
 	    	shots.add(ammo);
     	}
-    	ship.setbasecd(30);
+    	ship.setbasecd(15);
     	ship.shoot(graphToBack);
     }
     if (keys[5] == true) {
     	if (ship.getCD()) {
     		for (int i = 0; i < 30; i++) {
-    			int speed = (int) (Math.random() * 3 + 1);
-    			int xspeed = (int) (Math.random() * 3 + 1);
+    			int speed = (int) (Math.random() * 5 + 1);
+    			int xspeed = (int) (Math.random() * 3);
     			double neg = Math.random();
     			int mod = 1;
     			if (neg >= 0.5) {
     				mod = -1;
     			}
-		    	Ammo ammo = new Ammo(ship.getX() + 10, ship.getY() - 10, -speed, Color.GREEN, xspeed * mod);
+		    	Ammo ammo = new Ammo(ship.getX() + 10, ship.getY() - 20, -speed, Color.GREEN, xspeed * mod);
 		    	shots.add(ammo);
     		}
     	}
-    	ship.setbasecd(1500);
+    	ship.setbasecd(300);
     	ship.shoot(graphToBack);
     }
+    
+    ship.setSCD(ship.getSCD()-1);
+    
+    if (keys[6] == true) {
+    	if (ship.getSCD() <= 0) {
+    		ship.setSCD(1000);
+    	}
+    }
+    
+    
+    
     
     for (Alien al : horde.getList()) {
     	if (al.getY() > StarFighter.HEIGHT) {
@@ -129,30 +140,66 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     		Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getWidth() + 5, -1, Color.RED, 0);
 	    	shots.add(ammo);
   	    }
-    	double random = Math.random();
-	    if (random >= 0.998D) {
-	    	Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getWidth() + 5, 1, Color.RED, 0);
-	    	shots.add(ammo);
-	    }
-	    if (al.getHp() > 1) {
-	    	random = Math.random();
-		    if (random >= 0.95D) {
-		    	int speed = (int) (1 + 2 * Math.random());
-		    	int yspeed = (int) (1 + 2 * Math.random());
-		    	double neg = Math.random();
-    			int mod = 1;
-    			if (neg >= 0.5) {
-    				mod = -1;
-    			}
-		    	Ammo ammo = new Ammo(al.getX() + 80, al.getY() + al.getHeight() + 5, speed, Color.RED, yspeed * mod);
-		    	shots.add(ammo);
+    	if (al.getY() > 0) {
+	    	double random = Math.random();
+	    	if (al.getType().equalsIgnoreCase("railgun")) {
+	    		if (al.getRailgunTicker() > 1) {
+	    			al.setRailgunTicker(al.getRailgunTicker() - 1);
+				    
+	    		}
+	    		if (al.getRailgunTicker() == 1) {
+	    			for (int i = 0; i < 200; i++) {
+		    			int speed = (int) (1 + 50 * Math.random());
+				    	Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getHeight() + 5, speed, Color.RED, 0);
+				    	shots.add(ammo);
+	    			}
+	    			al.setRailgunTicker(0);
+	    			try
+	    		    {
+	    		      URL url = getClass().getResource("railgun.jpg");
+	    		      al.setImage(ImageIO.read(url));
+	    		    }
+	    		    catch(Exception e)
+	    		    {
+	    		      //feel free to do something here
+	    		    	e.printStackTrace();
+	    		    }
+	    		}
+	    		if (random >= 0.998D) {
+	    			al.setRailgunTicker(200);
+	    			try
+	    		    {
+	    		      URL url = getClass().getResource("railgunHOT.jpg");
+	    		      al.setImage(ImageIO.read(url));
+	    		    }
+	    		    catch(Exception e)
+	    		    {
+	    		      //feel free to do something here
+	    		    	e.printStackTrace();
+	    		    }
+			    }
+	    	} else {
+			    if (random >= 0.998D) {
+			    	Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getWidth() + 5, 1, Color.RED, 0);
+			    	shots.add(ammo);
+			    }
+	    	}
+		    if (al.getHp() > 1) {
+		    	random = Math.random();
+			    if (random >= 0.8D) {
+			    	int speed = (int) (1 + 3 * Math.random());
+			    	int yspeed = (int) (1 + 3 * Math.random());
+			    	double neg = Math.random();
+	    			int mod = 1;
+	    			if (neg >= 0.5) {
+	    				mod = -1;
+	    			}
+			    	Ammo ammo = new Ammo(al.getX() + 80, al.getY() + al.getHeight() + 5, speed, Color.RED, yspeed * mod);
+			    	shots.add(ammo);
+			    }
 		    }
-	    }
+    	}
     }
-    
-    shots.moveEmAll();
-    shots.drawEmAll(graphToBack);
-    shots.cleanEmUp();
 
     //add code to move Ship, Alien, etc.
     if (!ship.getCD()) {
@@ -167,31 +214,42 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     horde.moveEmAll();
     horde.drawEmAll(graphToBack);
     horde.removeDeadOnes(shots.getList());
-    if (horde.getSize() <= 0) {
-    	diffi+=10;
-    	if (diffi>=60) {
+    eTicker--;
+    if ((horde.getSize() <= 0 && !endless) || (endless && eTicker <= 0)) {
+    	diffi+=5;
+    	horde.setSize(diffi/5);
+    	horde.populate();
+    	System.out.println(diffi + " " + horde.getSize());
+    	if ((diffi>=60 && !endless) || diffi >= 300) {
     		gamestate = false;
     		graphToBack.setColor(Color.GREEN);
 			graphToBack.drawString("YOU WON!!!", 250, 250 );
     	}
-    	horde = new AlienHorde(diffi);
-    	if (diffi >= 50) {
-    		horde = new AlienHorde(0);
-    		Alien bigal = new Alien(300, 10, 200, 50, 1, 100);
+    	if (diffi % 100 == 0 && diffi >= 100) {
+    		Alien bigal = new Alien(300, 10, 200, 50, 1, 10, "Alien");
     		horde.add(bigal);
-    	} else {
-    		horde.populate();
     	}
+    	eTicker+=500;
     }
 
-    for (Ammo a : shots.getList()) {
-    		if (a.getY() <= ship.getY() + ship.getHeight() && a.getY() + a.getHeight() >= ship.getY()) {
+    for (int i = shots.getList().size() - 1; i >= 0; i--) {
+    	Ammo a = shots.getList().get(i);
+    	if (a.getColor() == Color.RED) {
+    		if (a.getY() + a.getHeight() <= ship.getY() + ship.getHeight() && a.getY() >= ship.getY()) {
 	    		if ((a.getX() >= ship.getX() && a.getX() + a.getWidth() <= ship.getX() + ship.getWidth())) {
-	    			gamestate = false;
-	    			graphToBack.setColor(Color.RED);
-	    			graphToBack.drawString("YOU DIED!!!", 250, 250 );
+	    			if (!(ship.getSCD() >= 500)) {
+		    			gamestate = false;
+		    			graphToBack.setColor(Color.RED);
+		    			graphToBack.drawString("YOU DIED!!!", 250, 250 );
+	    			} else {
+	    						  a.setSpeed(0);
+	    						  a.setxSpeed(0);
+	    						  a.setY(-50);
+	    						  shots.getList().remove(i);
+	    			}
 	    		}
     		}
+    	}
     }
     
     for (Alien a : horde.getList()) {
@@ -202,7 +260,26 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     			graphToBack.drawString("YOU DIED!!!", 250, 250 );
     		}
 		}
-}
+    
+    }
+    graphToBack.setColor(Color.RED);
+    graphToBack.drawString("Star Fighter Game (GAME OF THE YEAR: 2019)", 250, 50 );
+    graphToBack.drawString("CONTROLS: ", 250, 80);
+    graphToBack.drawString("WASD - Movement", 250, 100);
+    graphToBack.drawString("SPACE - Standard Fire", 360, 100);
+    graphToBack.drawString("E - Scattershot", 500, 100);
+    graphToBack.drawString("Q - Shield", 600, 100);
+    
+    shots.moveEmAll();
+    shots.drawEmAll(graphToBack);
+    shots.cleanEmUp();
+    
+    if (ship.getSCD() >= 500) {
+    	graphToBack.setColor(Color.CYAN);
+    	for (int i = 0; i < 3; i++) {
+    		graphToBack.drawOval(ship.getX() - i, ship.getY() - i, ship.getWidth() + i, ship.getHeight() + i);
+    	}
+    }
     
     twoDGraph.drawImage(back, null, 0, 0);
   }
@@ -234,6 +311,10 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     {
       keys[5] = true;
     }
+    if (e.getKeyCode() == KeyEvent.VK_Q)
+    {
+      keys[6] = true;
+    }
     repaint();
   }
 
@@ -262,6 +343,10 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     if (e.getKeyCode() == KeyEvent.VK_E)
     {
       keys[5] = false;
+    }
+    if (e.getKeyCode() == KeyEvent.VK_Q)
+    {
+      keys[6] = false;
     }
     repaint();
   }

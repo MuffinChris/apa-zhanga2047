@@ -41,11 +41,13 @@ public class Bullets
 
   public void cleanEmUp()
   {
-	  for (Ammo a : ammo) {
-		  if (a.getY() < 0 || a.getY() > StarFighter.HEIGHT + 500) {
+	  for (int i = ammo.size() - 1; i >= 0; i--) {
+		  Ammo a = ammo.get(i);
+		  if ((a.getY() < 0 || a.getY() > StarFighter.HEIGHT + 500) || (a.getX() <= -500 || a.getX() >= StarFighter.WIDTH + 500)) {
 			  a.setSpeed(0);
 			  a.setxSpeed(0);
 			  a.setY(-50);
+			  ammo.remove(i);
 		  }
 	  }
   }

@@ -15,40 +15,88 @@ public class Alien extends MovingThing
   private Image image;
   private boolean life;
   private int hp;
+  private String type;
+  
+  public void setImage(Image image) {
+	  this.image = image;
+  }
+  
+  private int railgunTicker;
+  
+  public int getRailgunTicker() {
+	  return railgunTicker;
+  }
+  
+  public void setRailgunTicker(int s) {
+	  railgunTicker = s;
+  }
 
   public Alien()
   {
-    this(0,0,30,30,0, 1);
+    this(0,0,30,30,0, 1, "Alien");
   }
 
   public Alien(int x, int y)
   {
     //add code here
-	  this(x, y, 50, 50, 3, 1);
+	  this(x, y, 50, 50, 3, 1, "Alien");
   }
 
   public Alien(int x, int y, int s)
   {
     //add code here
-	  this(x, y, 50, 50, s, 1);
+	  this(x, y, 50, 50, s, 1, "Alien");
   }
 
-  public Alien(int x, int y, int w, int h, int s, int hp)
+  public Alien(int x, int y, int w, int h, int s, int hp, String t)
   {
     super(x, y, w,h);
     speed=s;
     life = true;
     this.hp = hp;
-    try
-    {
-      URL url = getClass().getResource("alien.jpg");
-      image = ImageIO.read(url);
+    type = t;
+    if (type.equalsIgnoreCase("Alien")) {
+	    try
+	    {
+	      URL url = getClass().getResource("alien.jpg");
+	      image = ImageIO.read(url);
+	    }
+	    catch(Exception e)
+	    {
+	      //feel free to do something here
+	    	e.printStackTrace();
+	    }
     }
-    catch(Exception e)
-    {
-      //feel free to do something here
-    	e.printStackTrace();
+    if (type.equalsIgnoreCase("Railgun")) {
+	    try
+	    {
+	      URL url = getClass().getResource("railgun.jpg");
+	      image = ImageIO.read(url);
+	    }
+	    catch(Exception e)
+	    {
+	      //feel free to do something here
+	    	e.printStackTrace();
+	    }
+	    railgunTicker = 0;
     }
+    if (type.equalsIgnoreCase("Fast")) {
+	    try
+	    {
+	      URL url = getClass().getResource("fast.jpg");
+	      image = ImageIO.read(url);
+	    }
+	    catch(Exception e)
+	    {
+	      //feel free to do something here
+	    	e.printStackTrace();
+	    }
+	    speed = 4;
+    }
+  }
+  
+  public String getType() {
+	  return type;
   }
 
   public void setSpeed(int s)

@@ -19,6 +19,10 @@ public class AlienHorde
 	  return size;
   }
   
+  public void setSize(int s) {
+	  size = s;
+  }
+  
   public AlienHorde(int size)
   {
 	  aliens = new ArrayList<Alien>(size);
@@ -53,13 +57,22 @@ public class AlienHorde
 	  int ycnt = 0;
 	  int itery = 75;
 	  int speed = 1;
+	  String type = "Alien";
 	  for (int i = 0; i < size; i++) {
+		  int z = (int) (Math.random() * 7);
+		  if (z <= 4) {
+			  type = "alien";
+		  } else if (z > 4 && z < 6) { 
+			  type = "railgun";
+		  } else { 
+			  type = "fast";
+		  }
 			  if (basex + iterx * xcnt > StarFighter.WIDTH - basex * 2) {
 				  ycnt++;
 				  xcnt = 0;
 				  speed = -speed;
 			  }
-			  Alien al = new Alien(basex + iterx * xcnt, basey + itery * ycnt, 50, 50, speed, 1);
+			  Alien al = new Alien(basex + iterx * xcnt, basey + itery * ycnt, 50, 50, speed, 1, type);
 			  xcnt++;
 			  aliens.add(al);
 	  }
@@ -67,8 +80,6 @@ public class AlienHorde
   
   public void removeDeadOnes(List<Ammo> shots)
   {
-
-	  size = 1;
 	  for (Ammo a : shots) {
 	    	for (Alien al : getList()) {
 	    		if (a.getColor() != Color.RED) {
@@ -91,7 +102,6 @@ public class AlienHorde
 					    			if (!al.getLife()) {
 						    			al.setSpeed(0);
 					    				al.setY(-300);
-					    				
 					    			}
 				    			}
 				    		}
@@ -100,15 +110,15 @@ public class AlienHorde
 	    		}
 	    	}
 	    }
-	  for (Alien al : aliens) {
-		  if (al.getLife()) {
-			  size++;
-		  } else {
-			  al.setSpeed(0);
+	  for (int i = aliens.size() - 1; i >= 0; i--) {
+		  Alien al = aliens.get(i);
+		  if (!al.getLife()) {
+		      al.setSpeed(0);
 			  al.setY(-300);
+			  size--;
+			  aliens.remove(i);
 		  }
 	  }
-	  size-=1;
   }
   
   public List<Alien> getList() {

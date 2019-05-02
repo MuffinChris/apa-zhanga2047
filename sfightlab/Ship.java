@@ -17,6 +17,17 @@ public class Ship extends MovingThing
   private boolean cooldown = true;
   private int cdticker;
   
+  
+  private int scd = 200;
+  
+  public int getSCD() {
+	  return scd;
+  }
+  
+  public void setSCD(int s) {
+	  scd = s;
+  }
+  
   private int basecd = 50;
 
   public Ship()
