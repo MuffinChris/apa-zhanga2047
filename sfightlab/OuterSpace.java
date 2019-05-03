@@ -20,6 +20,10 @@ import javax.imageio.ImageIO;
 public class OuterSpace extends Canvas implements KeyListener, Runnable
 {
   private Ship ship;
+  
+  private int timebase = 5;
+  private int timebaseduration = 500;
+  private int timebasecd = 1200;
 
   /* uncomment once you are ready for this part
    */
@@ -30,17 +34,18 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
   private boolean[] keys;
   private BufferedImage back;
   
-  private boolean gamestate = true;
+  private boolean gamestate = false;
+  private boolean startgame = false;
   private int diffi = 10;
 
   private boolean endless = true;
-  private int eTicker = 500;
+  private int eTicker = 1000;
   
   public OuterSpace()
   {
     setBackground(Color.black);
 
-    keys = new boolean[7];
+    keys = new boolean[8];
 
     //instantiate other instance variables
     //Ship, Alien
@@ -56,8 +61,15 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
   public void update(Graphics window)
   {
+	  if (keys[4] == true && !startgame) {
+		  gamestate = true;
+		  startgame = true;
+	  }
 	  if(gamestate) {
-	paint(window);
+		  paint(window);
+	  } else if (!startgame){
+		  window.setColor(Color.CYAN);
+		  window.drawString("PRESS SPACE TO START",300, 300);
 	  }
   }
 
@@ -101,7 +113,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    	Ammo ammo = new Ammo(ship.getX() + 10, ship.getY() - 10, -4, Color.YELLOW, 0);
 	    	shots.add(ammo);
     	}
-    	ship.setbasecd(15);
+    	ship.setbasecd(25);
     	ship.shoot(graphToBack);
     }
     if (keys[5] == true) {
@@ -120,6 +132,11 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     	}
     	ship.setbasecd(300);
     	ship.shoot(graphToBack);
+    }
+    
+    if (keys[7] == true) {
+    	timebase = 10;
+    	
     }
     
     ship.setSCD(ship.getSCD()-1);
@@ -149,7 +166,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    		}
 	    		if (al.getRailgunTicker() == 1) {
 	    			for (int i = 0; i < 200; i++) {
-		    			int speed = (int) (1 + 50 * Math.random());
+		    			int speed = (int) (1 + 100 * Math.random());
 				    	Ammo ammo = new Ammo(al.getX() + 20, al.getY() + al.getHeight() + 5, speed, Color.RED, 0);
 				    	shots.add(ammo);
 	    			}
@@ -165,8 +182,9 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    		    	e.printStackTrace();
 	    		    }
 	    		}
-	    		if (random >= 0.998D) {
-	    			al.setRailgunTicker(200);
+	    		if (random >= 0.99D) {
+	    			if (al.getRailgunTicker() <= 0) {
+	    			al.setRailgunTicker(150);
 	    			try
 	    		    {
 	    		      URL url = getClass().getResource("railgunHOT.jpg");
@@ -177,6 +195,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	    		      //feel free to do something here
 	    		    	e.printStackTrace();
 	    		    }
+	    			}
 			    }
 	    	} else {
 			    if (random >= 0.998D) {
@@ -216,8 +235,8 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     horde.removeDeadOnes(shots.getList());
     eTicker--;
     if ((horde.getSize() <= 0 && !endless) || (endless && eTicker <= 0)) {
-    	diffi+=5;
-    	horde.setSize(diffi/5);
+    	diffi+=10;
+    	horde.setSize(5 + diffi/30);
     	horde.populate();
     	System.out.println(diffi + " " + horde.getSize());
     	if ((diffi>=60 && !endless) || diffi >= 300) {
@@ -226,10 +245,10 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 			graphToBack.drawString("YOU WON!!!", 250, 250 );
     	}
     	if (diffi % 100 == 0 && diffi >= 100) {
-    		Alien bigal = new Alien(300, 10, 200, 50, 1, 10, "Alien");
+    		Alien bigal = new Alien(300, 10, 200, 50, 1, 20, "Alien");
     		horde.add(bigal);
     	}
-    	eTicker+=500;
+    	eTicker+=1000 - diffi * 3;
     }
 
     for (int i = shots.getList().size() - 1; i >= 0; i--) {
@@ -315,6 +334,10 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     {
       keys[6] = true;
     }
+    if (e.getKeyCode() == KeyEvent.VK_SHIFT)
+    {
+      keys[7] = true;
+    }
     repaint();
   }
 
@@ -347,6 +370,10 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     if (e.getKeyCode() == KeyEvent.VK_Q)
     {
       keys[6] = false;
+    }
+    if (e.getKeyCode() == KeyEvent.VK_SHIFT)
+    {
+      keys[7] = false;
     }
     repaint();
   }
